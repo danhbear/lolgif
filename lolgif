@@ -1,0 +1,19 @@
+source=~/.lolcommits/$1
+temp=$source/tempgif
+out=$source/lol-$1.gif
+
+mkdir $temp
+
+i=0
+for file in `ls -tr $source/*.jpg`
+do
+  newfile=$temp/$i.jpg
+  cp $file $newfile
+  i=$((i+1))
+done
+
+ffmpeg -f image2 -i $temp/%d.jpg $temp/video.mp4
+ffmpeg -i $temp/video.mp4 -vf scale=320:-1 -r 10 -y $out
+
+rm -rf $temp
+open -a "Google Chrome" $out
